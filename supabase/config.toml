@@ -1,0 +1,10 @@
+project_id = "alma-ai"
+
+[functions.google-oauth-callback]
+verify_jwt = false
+
+[functions.wa-otp-send]
+verify_jwt = false
+
+[functions.wa-otp-verify]
+verify_jwt = false
