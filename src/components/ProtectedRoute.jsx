@@ -22,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
   useTimezoneSync(t?.user?.id ?? null);
-  const o = useNeedsSetup(t?.user?.id ?? null);
+  const o = useNeedsSetup(t?.user?.id ?? null, i.pathname === "/setup");
   if (r) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">

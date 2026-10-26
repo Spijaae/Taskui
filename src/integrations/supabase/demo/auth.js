@@ -1,6 +1,8 @@
 // Demo auth: phone OTP, email/password and a simulated Google sign-in,
 // with sessions kept in localStorage like supabase-js does.
 
+import { appUrl, isFileProtocol } from "@/lib/appUrl";
+
 import { getMeta, setMeta, table, commit, uuid } from "./store";
 
 const SESSION_KEY = "alma-demo:session";
@@ -179,8 +181,11 @@ export function createAuth(onSignedIn) {
       });
       signIn(user);
       onSignedIn?.(user, created);
-      const target = options.redirectTo || `${window.location.origin}/today`;
-      window.setTimeout(() => window.location.assign(target), 50);
+      const target = isFileProtocol || !options.redirectTo ? appUrl("/") : options.redirectTo;
+      window.setTimeout(() => {
+        window.location.assign(target);
+        if (isFileProtocol) window.location.reload();
+      }, 50);
       return { data: { provider, url: target }, error: null };
     },
     async signOut() {

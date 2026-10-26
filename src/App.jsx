@@ -1,6 +1,6 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 
 import AuthErrorToast from "@/components/AuthErrorToast";
 import { MobileNavProvider } from "@/components/MobileNavProvider";
@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/i18n";
+import { isFileProtocol } from "@/lib/appUrl";
 import Auth from "@/pages/Auth";
 import Index from "@/pages/Index";
 
@@ -28,6 +29,7 @@ const More = React.lazy(() => import("@/pages/More"));
 const NotFound = React.lazy(() => import("@/pages/NotFound"));
 
 const queryClient = new QueryClient();
+const Router = isFileProtocol ? HashRouter : BrowserRouter;
 
 const protectedRoutes = [
   ["/setup", Setup],
@@ -49,7 +51,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <Router>
         <LanguageProvider>
           <AuthErrorToast />
           <SearchPaletteProvider>
@@ -75,7 +77,7 @@ const App = () => (
             </MobileNavProvider>
           </SearchPaletteProvider>
         </LanguageProvider>
-      </BrowserRouter>
+      </Router>
     </TooltipProvider>
   </QueryClientProvider>
 );

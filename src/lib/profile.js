@@ -173,11 +173,13 @@ export const CONSENT_POINTS = [
   "Nobody else can read your vault. It is not shared with employers, and it is not used to make decisions about you.",
   "You can export everything or delete your account at any time, from Settings.",
 ];
-export function useNeedsSetup(e) {
-  const [t, setT] = React.useState(null);
+// `onSetupPage` makes the check run again when the user leaves /setup, so a
+// freshly finished onboarding isn't judged by the answer from before it.
+export function useNeedsSetup(e, onSetupPage = false) {
+  const key = e ? `${e}:${onSetupPage}` : null;
+  const [result, setResult] = React.useState({ key: null, value: null });
   React.useEffect(() => {
-    if (!e) {
-      setT(null);
+    if (!key) {
       return;
     }
     let r = false;
@@ -188,16 +190,12 @@ export function useNeedsSetup(e) {
         .eq("user_id", e)
         .maybeSingle();
       if (!r) {
-        if (error) {
-          setT(false);
-          return;
-        }
-        setT(needsSetup(data ?? {}));
+        setResult({ key, value: error ? false : needsSetup(data ?? {}) });
       }
     })();
     return () => {
       r = true;
     };
-  }, [e]);
-  return t;
+  }, [key]);
+  return result.key === key ? result.value : null;
 }

@@ -1,6 +1,8 @@
 import Lenis from "lenis";
 import React from "react";
 
+import { isFileProtocol } from "@/lib/appUrl";
+
 function prefersReducedMotion() {
   if (typeof window === "undefined" || !window.matchMedia) {
     return false;
@@ -17,7 +19,21 @@ export default function SmoothScroll({ children }) {
   const tRef = React.useRef(null);
   React.useEffect(() => {
     if (prefersReducedMotion() || hasCoarsePointer()) {
-      return;
+      if (!isFileProtocol) {
+        return;
+      }
+      // With hash routing an in-page "#section" link would change the route,
+      // so scroll to the section ourselves instead.
+      const jump = (s) => {
+        const link = s.target?.closest?.("a[href^='#']");
+        const target = link && link.getAttribute("href").length > 1 && document.querySelector(link.getAttribute("href"));
+        if (target) {
+          s.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      };
+      document.addEventListener("click", jump);
+      return () => document.removeEventListener("click", jump);
     }
     const n = new Lenis({
       duration: 0.62,
@@ -45,7 +61,9 @@ export default function SmoothScroll({ children }) {
         n.scrollTo(a, {
           offset: -96,
         });
-        window.history.replaceState(null, "", o);
+        if (!isFileProtocol) {
+          window.history.replaceState(null, "", o);
+        }
       }
     };
     document.addEventListener("click", r);

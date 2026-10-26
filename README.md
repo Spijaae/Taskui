@@ -7,6 +7,11 @@ Memory Vault, What Alma knows, Analytics, Settings, More), in English and Arabic
 The UI was rebuilt from the live app's production bundle, so the markup, Tailwind classes, copy, icons and
 images match the original.
 
+## Quick look (no install)
+
+Download `standalone/ALMA-AI.html` and double-click it. It's the whole app in one file and runs in the demo mode
+described below. Rebuild it with `npm run build:standalone`.
+
 ## Run it
 
 ```bash

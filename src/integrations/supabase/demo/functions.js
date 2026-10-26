@@ -2,6 +2,8 @@
 
 import { toast } from "sonner";
 
+import { appUrl } from "@/lib/appUrl";
+
 import { runChat } from "./assistant";
 import { currentUserId, deleteUser, issueOtpToken } from "./auth";
 import { commit, getMeta, setMeta, table, uuid } from "./store";
@@ -118,7 +120,7 @@ const handlers = {
       });
       commit();
     }
-    return { data: { authUrl: `${window.location.origin}/calendar?connected=true` }, error: null };
+    return { data: { authUrl: appUrl("/calendar?connected=true") }, error: null };
   },
   "get-calendar-events": () => {
     const userId = currentUserId();

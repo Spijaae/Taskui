@@ -11,7 +11,7 @@ import tile3 from "@/assets/tile-3.jpg";
 import { commit, table, uuid } from "./store";
 import { TABLES } from "./schema";
 
-const absolute = (url) => new URL(url, window.location.origin).toString();
+const absolute = (url) => new URL(url, document.baseURI).toString();
 
 function daysAgo(days, hours = 10, minutes = 0) {
   const d = new Date();
